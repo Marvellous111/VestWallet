@@ -6,6 +6,7 @@ import com.example.vestwallet.data.pfidata.PfiList
 import com.example.vestwallet.models.UserDetails
 import com.example.vestwallet.models.did.DidClass
 import com.example.vestwallet.models.pfis.ConversionStep
+import com.example.vestwallet.networkrequests.VcApiService
 import com.example.vestwallet.networkrequests.getCloseOrderMessage
 import com.example.vestwallet.networkrequests.getOfferings
 import com.example.vestwallet.networkrequests.placeOrder
@@ -18,6 +19,7 @@ import com.example.vestwallet.networkrequests.signRequestForQuote
 import com.example.vestwallet.networkrequests.verifyRequestForQuote
 import com.example.vestwallet.utils.findDetailedConversionPath
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import tbdex.sdk.protocol.models.Quote
 import web5.sdk.dids.did.BearerDid
 
@@ -55,6 +57,16 @@ class ConvertCurrencyClass {
             userDid = userDid,
             userDetails = userDetails
         )
+
+        val credentials = runBlocking {
+            val vcApiService = VcApiService()
+            vcApiService.getVc(
+                userDid = userDid,
+                countryCode = userDetails.countryCode,
+                userName = userDetails.firstName
+            )
+        }
+        val credentialsList = listOf<String>(credentials)
         Log.d("convertButtonPressed", matchedOfferings.toString())
         for (offeringIndex in 0..matchedOfferings.lastIndex) {
             val rfq = inputCurrency?.let {
@@ -65,7 +77,7 @@ class ConvertCurrencyClass {
                         offeringId = matchedOfferings[offeringIndex].metadata.id,
                         offeringFromCurrency = inputCurrencyCode,
                         offeringToCurrency = outputCurrencyCode,
-                        claims = listOf("hello", "will be changed soon"),
+                        claims = credentialsList,
                         amountToGive = conversionAmount,
                         fromPaymentBankAccount = it.account,
                         toPaymentBankAccount = it1.account
