@@ -1,0 +1,138 @@
+<resources>
+    <string name="app_name">VestWallet</string>
+    <string name="auth_choice_main_text">Vest your crypto assets between borders</string>
+    <string name="auth_choice_sub_text">Deposit, save, convert and store your crypto assets with access to liquidity at any time across borders.</string>
+    <string name="auth_choice_create">Create an account</string>
+    <string name="auth_choice_signin">Login to your account</string>
+    <string name="navigate_back">Navigate back button</string>
+
+    <string name="sign_in_title">Sign in to your account</string>
+    <string name="sign_in_subtitle">Sign in to your account using your email and password</string>
+    <string name="sign_in_text">Log in</string>
+    <string name="sign_in_sign_up_text">Don\'t have an account?</string>
+    <string name="sign_in_sign_up">Sign up</string>
+    <string name="sign_in_email">Email</string>
+    <string name="sign_in_password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+
+    <string name="sign_up_title">Create your account</string>
+    <string name="sign_up_subtitle">Create an account to get started with vestwallet</string>
+    <string name="sign_up_personal">Personal</string>
+    <string name="sign_up_personal_first_name">First name</string>
+    <string name="sign_up_personal_middle_name">Middle name</string>
+    <string name="sign_up_personal_last_name">Last name</string>
+    <string name="sign_up_Date_of_birth">Date of birth</string>
+    <string name="sign_up_Date_of_birth_placeholder">DD/MM/YYYY</string>
+    <string name="sign_up_details">Details</string>
+    <string name="sign_up_details_email">Email</string>
+    <string name="sign_up_details_password">Password</string>
+    <string name="sign_up_details_confirm_password">Confirm password</string>
+
+    <string name="sign_up_continue_button">Continue</string>
+
+    <string name="select_country_title">Select country of residence</string>
+    <string name="select_country_subtitle">Select the country that you currently live in</string>
+    <string name="select_country_australia">Australia</string>
+    <string name="select_country_mexico">Mexico</string>
+    <string name="select_country_kenya">Kenya</string>
+    <string name="select_country_united_kingdom">United Kingdom</string>
+    <string name="select_country_united_states_of_america">United States of America</string>
+    <string name="select_country_nigeria">Nigeria</string>
+    <string name="select_country_ghana">Ghana</string>
+
+    <string name="address_title">Update your personal details</string>
+    <string name="address_subtitle">You\'re almost done, just a few more steps to go. Update your address details</string>
+    <string name="address_phone_number">Phone number</string>
+    <string name="address_home_address">Home address</string>
+    <string name="address_city_placeholder">City/Province</string>
+    <string name="address_street_placeholder">Street</string>
+
+    <string name="verify_title">Verify your phone number or email</string>
+    <string name="verify_subtitle">You\'re done, please check your phone or email for the verification code sent to you</string>
+    <string name="verify_send_again">Send again</string>
+
+    <string name="set_pin_title">Set up your PIN code</string>
+    <string name="set_pin_subtitle">This is a pin that you will use to make all transactions, please keep this pin hidden and choose a pin you will remember</string>
+
+    <string name="global_icon_navigation">Navigation</string>
+
+    <string name="home_greeting">Hey, %s</string>
+    <string name="home_currency">United States Dollar</string>
+    <string name="home_button_deposit">Deposit</string>
+    <string name="home_button_convert">Convert</string>
+    <string name="home_button_withdraw">Withdraw</string>
+    <string name="home_recent">Recent</string>
+    <string name="home_see_all">See all</string>
+
+    <string name="transaction_history_text">Transaction history</string>
+    <string name="transaction_search_text">Search</string>
+    <string name="transaction_search_close">Close</string>
+
+    <string name="virtual_card_title">Get your virtual card to make online payments.</string>
+    <string name="virtual_card_coming_soon">Coming soon</string>
+
+    <string name="more_account_security_label">Account and security</string>
+    <string name="more_account_security_verification">Verification</string>
+    <string name="more_account_security_account_details">Account details</string>
+    <string name="more_account_security_change_pin">Change pin</string>
+    <string name="more_account_security_account_history">Account History</string>
+    <string name="more_support_label">Support</string>
+    <string name="more_support_self_care">Self care</string>
+    <string name="more_support_help">Help</string>
+    <string name="more_support_contact_us">Contact us</string>
+    <string name="more_appearance_label">Appearance</string>
+    <string name="more_appearance_display">Display</string>
+    <string name="more_actions_label">Actions</string>
+    <string name="more_actions_delete_account">Delete Account</string>
+    <string name="more_log_out">Log out</string>
+
+    <string name="deposit_option_title">Making a payment?</string>
+    <string name="deposit_option_usdc">Deposit using USDC (Recommended)</string>
+    <string name="deposit_option_bank">Deposit using a bank account</string>
+    <string name="deposit_option_card">Deposit using a debit card</string>
+
+    <string name="deposit_option_usdc_title">Deposit with USDC</string>
+    <string name="deposit_option_usdc_amount">Write the amount you want to transfer</string>
+    <string name="deposit_option_usdc_subtitle">Copy and send to your USDC address below</string>
+    <string name="deposit_option_usdc_button">Copy address</string>
+
+    <string name="deposit_option_card_title">Deposit using your debit card</string>
+    <string name="deposit_option_card_subtitle">Please fill in your card details</string>
+    <string name="deposit_option_card_card_number">Card number</string>
+    <string name="deposit_option_card_expiry_date">Expiry date</string>
+    <string name="deposit_option_card_cvv">CVV</string>
+
+    <string name="deposit_option_bank_title">Deposit using a bank account</string>
+    <string name="deposit_option_bank_subtitle">Below are your bank details</string>
+    <string name="deposit_option_bank_bank_name">Bank name</string>
+    <string name="deposit_option_bank_bank_account_number">Account number</string>
+    <string name="deposit_option_bank_bank_account_holder_name">Account holder name</string>
+
+    <string name="continue_button">Continue</string>
+    <string name="withdraw_button">Withdraw</string>
+
+    <string name="credit_card_confirm_transaction_title">Transaction details</string>
+    <string name="credit_card_confirm_transaction_id">Transaction ID</string>
+    <string name="credit_card_confirm_transaction_date">Transaction date</string>
+    <string name="credit_card_confirm_transaction_amount">Transaction amount</string>
+    <string name="credit_card_confirm_app_fee">App fee</string>
+    <string name="credit_card_confirm_total_amount">Total amount</string>
+    <string name="credit_card_confirm_note">Note</string>
+    <string name="credit_card_confirm_note_text">Deposit with credit card</string>
+    <string name="credit_card_confirm_button">Confirm payment details</string>
+
+    <string name="convert_amount_to_convert">Amount to convert</string>
+    <string name="convert_amount_to_recieve">Amount to recieve</string>
+    <string name="convert_conversion_fee">Conversion fee</string>
+    <string name="convert_converted_amount">Converted amount</string>
+    <string name="convert_currency_quote">Currency quote</string>
+    <string name="convert_button_text">Convert</string>
+    <string name="convert_pfi_text">PFI used</string>
+    <string name="convert_note_text">Converted to %s</string>
+
+    <string name="withdraw_to_usdc_address">Withdraw to usdc address</string>
+    <string name="withdraw_to_bank_account">Withdraw to bank account</string>
+
+    <string name="receipt_download_button">Download</string>
+    <string name="receipt_share_button">Share</string>
+</resources>
