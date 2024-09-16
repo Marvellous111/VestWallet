@@ -214,9 +214,6 @@ fun ConvertMergeScreen(
                         inputCurrencyCode = inputCurrencyCode,
                         conversionAmount = convertedAmount,
                         outputCurrencyCode = outputCurrencyCode,
-                        userDid = userDetails.userDid,
-                        userBearerDid = didClass,
-                        userDetails = userDetails
                     )
                     closingMessage = didClass.userBearerDid?.let {
                         viewModel.convertCurrency(

@@ -89,9 +89,7 @@ class AppUserViewModel : ViewModel() {
         inputCurrencyCode: String,
         conversionAmount: String,
         outputCurrencyCode: String,
-        userDid: String,
-        userBearerDid: DidClass,
-        userDetails: UserDetails
+        userDetails: UserDetails = realm.query<UserDetails>().find().first()
     ): Triple<MutableList<Quote>, MutableList<Double>, List<ConversionStep>> {
 
         val quoteDoubleList = mutableListOf<Double>()
@@ -112,14 +110,14 @@ class AppUserViewModel : ViewModel() {
         val matchedOfferings = getOfferings(
             inputCurrency = inputCurrencyCode,
             outputCurrency = outputCurrencyCode,
-            userDid = userDid,
+            userDid = userDetails.userDid,
             userDetails = userDetails
         )
 
         val credentials = runBlocking {
             val vcApiService = VcApiService()
             vcApiService.getVc(
-                userDid = userDid,
+                userDid = userDetails.userDid,
                 countryCode = userDetails.countryCode,
                 userName = userDetails.firstName
             )
@@ -131,7 +129,7 @@ class AppUserViewModel : ViewModel() {
                 outputCurrency?.let { it1 ->
                     requestForQuote(
                         pfiDid = pfiArray[offeringIndex].pfi.did,
-                        userDid = userDid,
+                        userDid = userDetails.userDid,
                         offeringId = matchedOfferings.first[offeringIndex].metadata.id,
                         offeringFromCurrency = inputCurrencyCode,
                         offeringToCurrency = outputCurrencyCode,
@@ -151,13 +149,13 @@ class AppUserViewModel : ViewModel() {
 //            }
 
 
+            var convertedToBearerDid: BearerDid? = null
             val signedRfq = rfq?.let {
-                userBearerDid.userBearerDid?.let { it1 ->
-                    signRequestForQuote(
-                        rfq = it,
-                        userBearerDid = it1
-                    )
-                }
+                convertedToBearerDid = DidClass().changetoBearerDid(userDetails.didDocument)
+                signRequestForQuote(
+                    rfq = it,
+                    userBearerDid = convertedToBearerDid!!
+                )
             }
             Log.d("signedrfq", signedRfq.toString())
 
@@ -166,7 +164,7 @@ class AppUserViewModel : ViewModel() {
                 Log.d("requestsenttopfi", "Request sent")
             }
             val quoteForRfq = signedRfq?.let {
-                userBearerDid.userBearerDid?.let { it1 ->
+                convertedToBearerDid?.let { it1 ->
                     pollQuoteFromPfi(
                         rfq = it,
                         userDid = it1
