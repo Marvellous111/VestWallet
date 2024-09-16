@@ -1,11 +1,22 @@
 package com.example.vestwallet.models
 
+import android.telecom.Call.Details.hasProperty
+import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.migration.AutomaticSchemaMigration
+import io.realm.kotlin.migration.RealmMigration
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.RealmUUID
 import io.realm.kotlin.types.annotations.PrimaryKey
 import web5.sdk.dids.didcore.DidDocument
 import kotlin.properties.Delegates
+
+
+//open class userTransactionsHistory : RealmObject {
+//    var
+//}
+
 
 open class UserCurrency : RealmObject {
     var code: String = ""    // E.g., USD, EUR
@@ -16,6 +27,7 @@ open class UserCurrency : RealmObject {
 
 open class UserDetails : RealmObject {
     @PrimaryKey
+    var id: Int = 0
     var email: String = ""
     var firstName: String = ""
     var lastName: String = ""

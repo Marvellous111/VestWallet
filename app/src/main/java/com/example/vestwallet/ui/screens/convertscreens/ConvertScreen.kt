@@ -61,17 +61,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vestwallet.R
 import com.example.vestwallet.data.CountryCurrencyList
 import com.example.vestwallet.models.UserDetails
 import com.example.vestwallet.models.did.DidClass
 import com.example.vestwallet.models.pfis.ConversionStep
-import com.example.vestwallet.networkrequests.createUserDid
-import com.example.vestwallet.networkrequests.getUserDidDocument
-import com.example.vestwallet.ui.screens.CurrencyDropDown
 import com.example.vestwallet.ui.theme.Poppins
 import com.example.vestwallet.ui.theme.VestWalletTheme
-import com.example.vestwallet.ui.viewmodel.ConvertCurrencyClass
+import com.example.vestwallet.ui.viewmodel.AppUserViewModel
+import com.example.vestwallet.ui.viewmodel.AuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
@@ -79,7 +78,10 @@ import kotlinx.coroutines.launch
 import tbdex.sdk.protocol.models.Quote
 
 @Composable
-fun ConvertScreen(modifier: Modifier = Modifier) {
+fun ConvertScreen(
+    viewModel: AppUserViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
     val windowInsets = WindowInsets.systemBars
     val density = LocalDensity.current
     val statusBarHeight = with(density) { windowInsets.getTop(density).toDp() }
@@ -88,7 +90,7 @@ fun ConvertScreen(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         ConvertMergeScreen(
-            convertCurrencyClass = ConvertCurrencyClass(),
+            viewModel = viewModel,
             didClass = DidClass(),
             userDetails = UserDetails()
         )
@@ -98,7 +100,7 @@ fun ConvertScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun ConvertMergeScreen(
-    convertCurrencyClass: ConvertCurrencyClass,
+    viewModel: AppUserViewModel,
     didClass: DidClass,
     userDetails: UserDetails,
     modifier: Modifier = Modifier
@@ -208,7 +210,7 @@ fun ConvertMergeScreen(
 //
 //                    val mockDidClass = DidClass(userBearerDid = mockUserDid.first)
 
-                    quoteAndArray = convertCurrencyClass.getCurrencyQuotes(
+                    quoteAndArray = viewModel.getCurrencyQuotes(
                         inputCurrencyCode = inputCurrencyCode,
                         conversionAmount = convertedAmount,
                         outputCurrencyCode = outputCurrencyCode,
@@ -217,13 +219,13 @@ fun ConvertMergeScreen(
                         userDetails = userDetails
                     )
                     closingMessage = didClass.userBearerDid?.let {
-                        convertCurrencyClass.convertCurrency(
+                        viewModel.convertCurrency(
                             userBearerDid = it,
                             quotes = quoteAndArray.first,
                             userDid = userDetails.userDid
                         )
                     }!!
-                    withContext(Dispatchers.IO) {
+                    withContext(Dispatchers.Main) {
                         outputCurrencyAmount = quoteAndArray.first.last().data.payout.amount
                         closingMessage.second?.let { Log.d("ConvertScreen", it) }
                     }

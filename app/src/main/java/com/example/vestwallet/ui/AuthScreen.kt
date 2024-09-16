@@ -13,7 +13,7 @@ import com.example.vestwallet.ui.navigation.AuthNavigation
 fun AuthScreen(modifier: Modifier = Modifier, navController: NavHostController = rememberNavController()) {
     Surface {
         AuthNavigation(
-            navController,
+            navController = navController,
             modifier = modifier
         )
     }

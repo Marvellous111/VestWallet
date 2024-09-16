@@ -2,6 +2,7 @@ package com.example.vestwallet.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +15,7 @@ import com.example.vestwallet.ui.screens.signupscreens.SelectCountryScreen
 import com.example.vestwallet.ui.screens.signupscreens.SetPinScreen
 import com.example.vestwallet.ui.screens.signupscreens.SignUpScreen
 import com.example.vestwallet.ui.screens.signupscreens.VerifyScreen
+import com.example.vestwallet.ui.viewmodel.AuthViewModel
 
 @Composable
 fun AuthNavigation(

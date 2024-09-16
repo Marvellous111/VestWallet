@@ -1,5 +1,7 @@
 package com.example.vestwallet.ui.screens.signupscreens
 
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,9 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vestwallet.R
 import com.example.vestwallet.models.AuthState
@@ -42,7 +46,13 @@ import kotlinx.coroutines.launch
 import web5.sdk.dids.did.BearerDid
 
 @Composable
-fun AddressScreen(onNavigateBack: () -> Unit, mainPageOnClick: () -> Unit, modifier: Modifier = Modifier) {
+fun AddressScreen(
+    viewModel: AuthViewModel = viewModel(),
+    onNavigateBack: () -> Unit,
+    mainPageOnClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val userDetails by remember { mutableStateOf(UserDetails()) }
     Scaffold(
         topBar = {
             SignUpTopAppBar(
@@ -55,8 +65,8 @@ fun AddressScreen(onNavigateBack: () -> Unit, mainPageOnClick: () -> Unit, modif
             .background(MaterialTheme.colorScheme.background)
     ) { innerPadding ->
         AddressmergeScreen(
-            viewModel = viewModel(),
-            userDetails = UserDetails(),
+            viewModel = viewModel,
+            userDetails = userDetails,
             mainPageOnClick = mainPageOnClick,
             modifier = Modifier.padding(innerPadding)
         )
@@ -98,13 +108,12 @@ fun AddressmergeScreen(
         )
         AddressContinueButton(
             mainPageOnClick = {
-                userDetails.phoneNumber = phoneNumber
-                userDetails.transactionPin = (1234).toString()
-
-                viewModel.SignUp(
-                    userDetails = userDetails,
-                    didClass = DidClass()
+                viewModel.updateAddressPage(
+                    phoneNumber = phoneNumber
                 )
+
+                viewModel.SignUp()
+                viewModel.updateAuthState(AuthState.Authenticated("email"))
             }
         )
     }

@@ -1,5 +1,6 @@
 package com.example.vestwallet.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,13 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,22 +57,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vestwallet.R
 import com.example.vestwallet.data.CountryCurrencyList
 import com.example.vestwallet.data.transactionList
-import com.example.vestwallet.models.Currency
 import com.example.vestwallet.models.TransactionType
 import com.example.vestwallet.models.TransactionTypeEnum
+import com.example.vestwallet.ui.viewmodel.AppUserViewModel
+import com.example.vestwallet.ui.viewmodel.AuthViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
 fun HomeScreen(
+    viewModel: AppUserViewModel = viewModel(),
     toWithdrawTransactionScreen: () -> Unit,
     toDepositTransactionScreen: () -> Unit,
     toConvertTransactionScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var currentUser by remember { mutableStateOf<Triple<String, String, String>>(Triple("", "", "")) }
+    LaunchedEffect(Unit) {
+        currentUser = viewModel.getCurrentUser()
+    }
 //    val windowInsets = WindowInsets.systemBars
 //    val density = LocalDensity.current
 //    val statusBarHeight = with(density) { windowInsets.getTop(density).toDp() }
@@ -82,6 +89,8 @@ fun HomeScreen(
             //.padding(top = (statusBarHeight + 50.dp))
     ) {
         HomeMergeComponents(
+            currentUser = currentUser,
+            viewModel = viewModel,
             toWithdrawTransactionScreen = toWithdrawTransactionScreen,
             toDepositTransactionScreen = toDepositTransactionScreen,
             toConvertTransactionScreen = toConvertTransactionScreen,
@@ -93,6 +102,8 @@ fun HomeScreen(
 
 @Composable
 fun HomeMergeComponents(
+    currentUser: Triple<String, String, String>,
+    viewModel: AppUserViewModel,
 //    type: TransactionTypeEnum,
     toWithdrawTransactionScreen: () -> Unit,
     toDepositTransactionScreen: () -> Unit,
@@ -105,6 +116,8 @@ fun HomeMergeComponents(
     ) {
         Spacer(modifier = Modifier.height(30.dp))
         MoneyCard(
+            currentUser = currentUser,
+            viewModel = viewModel,
             toWithdrawTransactionScreen = toWithdrawTransactionScreen,
             toConvertTransactionScreen = toConvertTransactionScreen,
             toDepositTransactionScreen = toDepositTransactionScreen
@@ -122,7 +135,14 @@ fun HomeMergeComponents(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar(modifier: Modifier = Modifier) {
+fun HomeTopBar(
+    viewModel: AppUserViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
+    var currentUser by remember { mutableStateOf<Triple<String, String, String>>(Triple("", "", "")) }
+    LaunchedEffect(Unit) {
+        currentUser = viewModel.getCurrentUser()
+    }
     Row(
         modifier
             .padding(16.dp)
@@ -141,7 +161,7 @@ fun HomeTopBar(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = stringResource(R.string.home_greeting, " Edith"),
+                text = stringResource(R.string.home_greeting, " ${currentUser.first}"),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -162,13 +182,26 @@ fun HomeTopBar(modifier: Modifier = Modifier) {
 // This is the main card to display amount with different buttons for interacting with the app
 @Composable
 fun MoneyCard(
+    currentUser: Triple<String, String, String>,
+    viewModel: AppUserViewModel,
     toWithdrawTransactionScreen: () -> Unit,
     toConvertTransactionScreen: () -> Unit,
     toDepositTransactionScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val amountNumber = 7600
-    val amount = NumberFormat.getCurrencyInstance(Locale.US).format(amountNumber)
+//    val amountNumber = if (currentUser.third.toDouble() == 0.00) {
+//        "0.00"
+//    } else if (currentUser.third == "null") {
+//        "NULL"
+//    }else {
+//        "problematic"
+//    }
+    val amountNumber = currentUser.third.toDoubleOrNull()
+    val amount = if (amountNumber == null) {
+        "0.NULL"
+    } else {
+        NumberFormat.getCurrencyInstance(Locale.US).format(amountNumber)
+    }
     Box(
         modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
     ) {
@@ -188,7 +221,9 @@ fun MoneyCard(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    CurrencyDropDown()
+                    CurrencyDropDown(
+                        CurrentUser = currentUser
+                    )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         text = amount,
@@ -216,6 +251,7 @@ fun MoneyCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurrencyDropDown(
+    CurrentUser: Triple<String, String, String>,
     modifier: Modifier = Modifier
 ) {
     var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
@@ -223,7 +259,7 @@ fun CurrencyDropDown(
 
     val listOfCurrency = CountryCurrencyList.currencyList
 
-    var selectedText by remember { mutableStateOf(listOfCurrency[0].currencyCode) }
+    var selectedText by remember { mutableStateOf(CurrentUser.second) }
 
     val selectedCountryFlag = when (selectedText) {
         "KES" -> R.drawable.kenya

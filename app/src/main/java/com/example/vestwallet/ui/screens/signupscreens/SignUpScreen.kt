@@ -1,5 +1,7 @@
 package com.example.vestwallet.ui.screens.signupscreens
 
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,8 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vestwallet.R
 import com.example.vestwallet.models.AuthState
@@ -42,7 +46,12 @@ import com.example.vestwallet.ui.viewmodel.AuthViewModel
 
 
 @Composable
-fun SignUpScreen(selectCountryOnClick: () -> Unit, onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
+fun SignUpScreen(
+    viewModel: AuthViewModel = viewModel(),
+    selectCountryOnClick: () -> Unit,
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
 //    val windowInsets = WindowInsets.systemBars
 //    val density = LocalDensity.current
 //    val statusBarHeight = with(density) { windowInsets.getTop(density).toDp() }
@@ -58,7 +67,7 @@ fun SignUpScreen(selectCountryOnClick: () -> Unit, onNavigateBack: () -> Unit, m
             .background(MaterialTheme.colorScheme.background)
     ) { innerPadding ->
         SignUpMergeScreen(
-            viewModel = viewModel(),
+            viewModel = viewModel,
             userDetails = UserDetails(),
             selectCountryOnClick = selectCountryOnClick,
             modifier = Modifier.padding(innerPadding)
@@ -121,13 +130,9 @@ fun SignUpMergeScreen(
         SignUpContinueButton(
             selectCountryOnClick = {
                 if (password == confirmPassword) {
-                    userDetails.firstName = firstName
-                    userDetails.middleName = middleName
-                    userDetails.lastName = lastName
-                    userDetails.email = email
-                    userDetails.dateOfBirth = dateOfBirth
-                    userDetails.password = password
-
+                    viewModel.updateSignUpPage(
+                        firstName, middleName, lastName, email, dateOfBirth, password
+                    )
                     viewModel.updateAuthState(AuthState.Authenticated(email))
                 }
             }

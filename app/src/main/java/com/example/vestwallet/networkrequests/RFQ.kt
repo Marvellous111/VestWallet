@@ -7,6 +7,7 @@ import tbdex.sdk.protocol.models.CreateSelectedPayoutMethod
 import tbdex.sdk.protocol.models.Offering
 import tbdex.sdk.protocol.models.Rfq
 import web5.sdk.credentials.VerifiableCredential
+import web5.sdk.credentials.model.PresentationDefinitionV2
 import web5.sdk.dids.did.BearerDid
 
 fun requestForQuote(

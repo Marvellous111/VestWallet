@@ -20,7 +20,7 @@ fun getOfferings(
     outputCurrency: String,
     userDid: String,
     userDetails: UserDetails
-): List<Offering> {
+): Pair<List<Offering>, List<List<String>>> {
 
     //var scope = CoroutineScope(Dispatchers.IO)
 
@@ -46,6 +46,8 @@ fun getOfferings(
     }
     val credentialsList = listOf<String>(credentials)
 
+    val claimsList = mutableListOf<List<String>>()
+
     if (pfiArray.isNotEmpty()) {
         for (steps in pfiArray) {
             pfiDid = steps.pfi.did
@@ -55,11 +57,17 @@ fun getOfferings(
                 offering.data.payin.currencyCode == steps.fromCurrency && offering.data.payout.currencyCode == steps.toCurrency
             }.forEach { offering ->
                 offering.data.requiredClaims?.let { presentationDefinition ->
+//                    requiredClaimsList.add((offering.data.requiredClaims?))
                     try {
                         //Validate user vc against offering presentation definition
                         PresentationExchange.satisfiesPresentationDefinition(
                             credentialsList, presentationDefinition
                         )
+                        val selectedClaims = PresentationExchange.selectCredentials(
+                            credentialsList,
+                            presentationDefinition
+                        )
+                        claimsList.add(selectedClaims)
                         matchedOfferings.add(offering)
                     } catch (e: Exception) {
 
@@ -69,5 +77,5 @@ fun getOfferings(
         }
     }
 
-    return matchedOfferings
+    return Pair(matchedOfferings, claimsList)
 }

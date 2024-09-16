@@ -1,5 +1,6 @@
 package com.example.vestwallet.ui.screens.signupscreens
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -28,9 +29,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vestwallet.R
 import com.example.vestwallet.data.countryList
@@ -40,7 +43,12 @@ import com.example.vestwallet.ui.viewmodel.AuthViewModel
 
 
 @Composable
-fun SelectCountryScreen(onNavigateBack: () -> Unit, addressOnClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SelectCountryScreen(
+    viewModel: AuthViewModel = viewModel(),
+    onNavigateBack: () -> Unit,
+    addressOnClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Scaffold(
         topBar = {
             SignUpTopAppBar(
@@ -52,6 +60,7 @@ fun SelectCountryScreen(onNavigateBack: () -> Unit, addressOnClick: () -> Unit, 
             .background(MaterialTheme.colorScheme.background)
     ) { innerPadding ->
         SelectCountryMergeScreen(
+            viewModel = viewModel,
             addressOnClick = addressOnClick,
             modifier = modifier.padding(innerPadding)
         )
@@ -59,7 +68,7 @@ fun SelectCountryScreen(onNavigateBack: () -> Unit, addressOnClick: () -> Unit, 
 }
 
 @Composable
-fun SelectCountryMergeScreen(addressOnClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SelectCountryMergeScreen(viewModel: AuthViewModel, addressOnClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .statusBarsPadding()
@@ -67,13 +76,14 @@ fun SelectCountryMergeScreen(addressOnClick: () -> Unit, modifier: Modifier = Mo
             .padding(top = 50.dp)
     ) {
         SelectCountryChoiceForm(
+            viewModel = viewModel,
             onClick = addressOnClick,
         )
     }
 }
 
 @Composable
-fun SelectCountryChoiceForm(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SelectCountryChoiceForm(viewModel: AuthViewModel, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier
     ) {
@@ -90,7 +100,7 @@ fun SelectCountryChoiceForm(onClick: () -> Unit, modifier: Modifier = Modifier) 
         )
         Spacer(modifier = Modifier.height(40.dp))
         CountryFormButtons(
-            viewModel = viewModel(),
+            viewModel = viewModel,
             userDetails = UserDetails(),
             onClick = onClick
         )
@@ -118,7 +128,7 @@ fun CountryFormButtons(
             OutlinedButton(
                 onClick = {
                     val country = it
-                    userDetails.countryCode = when (country.countryName) {
+                    var countryCode = when (country.countryName) {
                         R.string.select_country_australia -> "AUD"
                         R.string.select_country_kenya -> "KES"
                         R.string.select_country_mexico -> "MXN"
@@ -128,7 +138,7 @@ fun CountryFormButtons(
                         R.string.select_country_united_states_of_america -> "USA"
                         else -> "EUR"
                     }
-                    userDetails.country = when (country.countryName) {
+                    var countryName = when (country.countryName) {
                         R.string.select_country_australia -> "America"
                         R.string.select_country_kenya -> "Kenya"
                         R.string.select_country_mexico -> "Mexico"
@@ -138,7 +148,11 @@ fun CountryFormButtons(
                         R.string.select_country_united_states_of_america -> "United States of America"
                         else -> "European Country"
                     }
-                    Log.d("userdetails",userDetails.firstName)
+                    viewModel.updateCountryPage(
+                        countryName = countryName,
+                        countryCode = countryCode
+                    )
+                    Log.d("userDetailsEmail", viewModel.userDetailsState.email)
                     viewModel.updateAuthState(AuthState.Authenticated("email"))
                 },
                 shape = RoundedCornerShape(5.dp),
